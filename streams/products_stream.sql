@@ -1,0 +1,3 @@
+CREATE OR REPLACE STREAM raw.products_stream
+ON TABLE raw.products
+SHOW_INITIAL_ROWS = TRUE;

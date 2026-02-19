@@ -1,0 +1,3 @@
+CREATE OR REPLACE STREAM raw.invoices_stream
+ON TABLE raw.invoices
+SHOW_INITIAL_ROWS = TRUE;
