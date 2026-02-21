@@ -1,0 +1,4 @@
+prefect
+snowflake
+datetime
+python-dotenv

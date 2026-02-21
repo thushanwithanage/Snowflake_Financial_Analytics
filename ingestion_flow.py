@@ -7,6 +7,18 @@ import os
 database = SNOWFLAKE_CONFIG["database"]
 schema = SNOWFLAKE_CONFIG["schema"]
 
+@task
+def validate_files(files: list[str], log_path: str) -> list[str]:
+    logger = FlowLogger(log_path, entity="validator")
+    valid = []
+    for file in files:
+        if os.path.getsize(file) == 0:
+            logger.warning(f"Skipping empty file: {file}")
+            continue
+        valid.append(file)
+    logger.info(f"{len(valid)}/{len(files)} files passed validation")
+    return valid
+
 @task(retries=3, retry_delay_seconds=10)
 def validate_stage(stage_name, log_path):
     logger = FlowLogger(log_path, entity=stage_name)
