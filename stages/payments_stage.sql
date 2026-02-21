@@ -1,0 +1,1 @@
+CREATE STAGE raw.payments_stage;

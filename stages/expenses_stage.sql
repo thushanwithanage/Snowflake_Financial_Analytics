@@ -1,0 +1,1 @@
+CREATE STAGE raw.expenses_stage;

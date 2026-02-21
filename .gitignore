@@ -1,1 +1,7 @@
 data/
+logs/
+.env
+
+db/__pycache__/
+config/__pycache__/
+log_utils/__pycache__/

@@ -1,0 +1,1 @@
+CREATE STAGE raw.customers_stage;
