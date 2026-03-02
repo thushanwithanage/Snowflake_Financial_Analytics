@@ -146,7 +146,6 @@ Install dependencies:
 2.  Run ingestion:
 
 ```{=html}
-<!-- -->
 ```
     python -m ingestion_flow
 
