@@ -2,7 +2,11 @@
 
 **Snowflake Medallion Warehouse + Prefect Orchestrated Ingestion**
 
-A production-ready financial analytics platform built on Snowflake with ingestion orchestrated using Prefect.
+A production-ready financial analytics platform built on Snowflake using a Medallion architecture, with ingestion orchestrated via Prefect.
+
+The platform delivers business-ready financial KPIs through a dedicated `analytics` schema built on top of curated fact and dimension tables.
+
+------------------------------------------------------------------------
 
 ## Architecture Overview
 
@@ -18,7 +22,9 @@ Streams (CDC)\
 ↓\
 Curated Schema (Dimensions & Facts)\
 ↓\
-Dynamic Data Quality Checks
+Analytics Schema (Business KPI Views)\
+↓\
+BI / Dashboard Layer
 
 ------------------------------------------------------------------------
 
@@ -26,53 +32,96 @@ Dynamic Data Quality Checks
 
 ### Raw Layer (`raw` schema)
 
--   Landing tables for source data
--   Untransformed operational datasets
--   Ingested via Prefect + Snowflake PUT/COPY
-
-### Curated Layer (`curated` schema)
-
--   Dimension tables: `dim_customer`, `dim_product`
--   Fact table: `fact_revenue`
--   Populated using MERGE for idempotent transformations
-
-### Streams (CDC)
-
--   Capture incremental changes from raw tables
-
-### Tasks (Orchestration)
-
--   Scheduled transformations with dependency chaining
--   CRON scheduling (Europe/Dublin)
-
-### Data Quality Framework
-
--   Dynamic stored procedure (`curated.run_dq_checks`)
--   Rules stored in `curated.dq_rules`
--   Results logged in `curated.dq_logs`
-
-Supported checks: - NULL_CHECK - RANGE_CHECK - FORMAT_CHECK
+-   Landing tables for source data\
+-   Untransformed operational datasets\
+-   Ingested via Prefect + Snowflake `PUT` / `COPY`
 
 ------------------------------------------------------------------------
 
-## Key Features
+### Curated Layer (`curated` schema)
 
-### Ingestion (Prefect)
+Business-modeled warehouse layer:
 
--   Automatic CSV discovery
--   Stage validation/creation
--   Parallel uploads (PUT) and COPY operations
--   Retry logic
--   Structured JSON logging
+**Dimensions** - `dim_customer` - `dim_product`
 
-### Warehouse (Snowflake)
+**Fact** - `fact_revenue`
 
--   Medallion architecture
--   MERGE-based idempotent loads
--   Change Data Capture (Streams)
--   Task dependency orchestration
--   Auto-suspend warehouse (cost optimization)
--   Dynamic DQ framework
+Features: - MERGE-based idempotent transformations\
+- Change Data Capture using Streams\
+- Task-based orchestration\
+- Data Quality stored procedure framework
+
+------------------------------------------------------------------------
+
+### Analytics Layer (`analytics` schema)
+
+This layer exposes business-ready KPI views designed for reporting, dashboards, and financial analysis.
+
+------------------------------------------------------------------------
+
+## Analytics Views
+
+### 1. Monthly Revenue Summary
+
+`analytics.monthly_revenue_summary`
+
+Provides revenue metrics grouped by: - Year - Month - Customer Segment - Country
+
+Metrics: - `total_revenue` - `total_invoices` - `avg_invoice_value`
+
+------------------------------------------------------------------------
+
+### 2. Customer Lifetime Value (LTV)
+
+`analytics.customer_ltv`
+
+Customer-level financial metrics: - Total invoices - Total revenue - Average invoice value - Customer lifespan (days between first and last invoice)
+
+------------------------------------------------------------------------
+
+### 3. Product Performance
+
+`analytics.product_performance`
+
+Product-level performance metrics: - Revenue per product - Number of invoices sold - Average selling price - Category-level aggregation
+
+------------------------------------------------------------------------
+
+### 4. Accounts Receivable Aging
+
+`analytics.ar_aging`
+
+Invoice-level aging analysis: - Days outstanding - Aging buckets (0--30, 31--60, 61--90, 90+)
+
+------------------------------------------------------------------------
+
+### 5. Revenue Growth Analysis
+
+`analytics.revenue_growth`
+
+Monthly revenue with: - Month-over-Month (MoM) growth % - Year-over-Year (YoY) growth %
+
+------------------------------------------------------------------------
+
+### 6. Rolling 12-Month Revenue
+
+`analytics.rolling_12m_revenue`
+
+Trailing 12-month revenue trend using window functions.
+
+------------------------------------------------------------------------
+
+## Data Quality Framework
+
+Implemented in `curated` schema:
+
+-   Stored procedure: `run_dq_checks`
+-   Rules table: `dq_rules`
+-   Log table: `dq_logs`
+
+Supported checks: - NULL_CHECK\
+- RANGE_CHECK\
+- FORMAT_CHECK
 
 ------------------------------------------------------------------------
 
@@ -80,28 +129,49 @@ Supported checks: - NULL_CHECK - RANGE_CHECK - FORMAT_CHECK
 
 ### Prerequisites
 
--   Python 3.8+
--   Snowflake account
--   Prefect 3+
+-   Python 3.8+\
+-   Snowflake account\
+-   Prefect 3+\
 -   snowflake-connector-python
 
 Install dependencies:
 
-pip install prefect snowflake-connector-python python-dotenv
-
-Create a .env file with Snowflake credentials and configuration.
+    pip install prefect snowflake-connector-python python-dotenv
 
 ------------------------------------------------------------------------
 
 ## Running the Pipeline
 
-1.  Execute warehouse and schema SQL setup scripts.
+1.  Execute warehouse and schema SQL setup scripts.\
 2.  Run ingestion:
 
-python -m ingestion_flow
+```{=html}
+<!-- -->
+```
+    python -m ingestion_flow
 
-## 👤 Author
+3.  Query analytics views:
+
+``` sql
+SELECT * FROM analytics.monthly_revenue_summary;
+SELECT * FROM analytics.revenue_growth;
+```
+
+------------------------------------------------------------------------
+
+## Business Value
+
+-   End-to-end data engineering\
+-   Financial KPI modeling\
+-   Advanced SQL (window functions, growth rates, rolling metrics)\
+-   CDC-based incremental processing\
+-   Production-grade orchestration\
+-   Data quality automation
+
+------------------------------------------------------------------------
+
+## Author
 
 Thushan Withanage
 
-Last Updated: February 2026
+Last Updated: 2nd March 2026
