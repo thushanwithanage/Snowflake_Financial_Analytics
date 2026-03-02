@@ -145,10 +145,13 @@ Install dependencies:
 1.  Execute warehouse and schema SQL setup scripts.\
 2.  Run ingestion:
 
-```{=html}
-<!-- -->
-```
     python -m ingestion_flow
+
+3.  Query analytics views:
+
+``` sql
+SELECT * FROM analytics.monthly_revenue_summary;
+SELECT * FROM analytics.revenue_growth;
 ```
 
 ------------------------------------------------------------------------
