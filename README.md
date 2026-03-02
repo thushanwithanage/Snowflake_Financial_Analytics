@@ -145,7 +145,6 @@ Install dependencies:
 1.  Execute warehouse and schema SQL setup scripts.\
 2.  Run ingestion:
 
-```{=html}
 ```
     python -m ingestion_flow
 
