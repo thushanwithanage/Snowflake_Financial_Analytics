@@ -111,6 +111,26 @@ Trailing 12-month revenue trend using window functions.
 
 ------------------------------------------------------------------------
 
+## Predictive Analytics: Next-Month Customer Purchase
+
+**Objective:** Predict whether a customer will make a purchase next month (binary classification).
+
+**Model:** XGBoost Classifier
+
+**Features used:**
+- Customer demographics: industry, country, signup date
+- Customer behavior: recency (days since last invoice), frequency (total invoices), monetary value (total & average invoice)
+- Product diversity: number of product categories purchased
+- Customer tenure (days since signup)
+
+**Target:** PURCHASE_NEXT_MONTH (0 = no purchase, 1 = purchase)
+
+**Highlights:**
+- Handles class imbalance using `scale_pos_weight` for better classification of rare events
+- Evaluated using ROC-AUC, accuracy, confusion matrix, and classification report
+- Supports business decisions for targeted marketing, retention, and operational planning
+- Threshold can be tuned to balance precision and recall according to business priorities
+
 ## Data Quality Framework
 
 Implemented in `curated` schema:
@@ -158,11 +178,11 @@ SELECT * FROM analytics.revenue_growth;
 
 ## Business Value
 
--   End-to-end data engineering\
--   Financial KPI modeling\
--   Advanced SQL (window functions, growth rates, rolling metrics)\
--   CDC-based incremental processing\
--   Production-grade orchestration\
+-   End-to-end data engineering
+-   Financial KPI modeling
+-   Advanced SQL (window functions, growth rates, rolling metrics)
+-   CDC-based incremental processing
+-   Production-grade orchestration
 -   Data quality automation
 
 ------------------------------------------------------------------------
